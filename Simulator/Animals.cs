@@ -21,30 +21,38 @@ public class Animals
     {
         _description = "Unknown";
     }
+namespace Simulator;
 
-    public Animals(string description, int size = 3)
+public class Animals
+{
+    private string _description = "";
+
+    public required string Description
     {
-        Description = description;
-        Size = size;
+        get => _description;
+        init => _description = ValidateDescription(value);
     }
 
-    // Info property, e.g. "Dogs <3>"
-    public string Info => $"{Description} <{Size}>";
+    public uint Size { get; set; } = 3;
 
-    // Helper: similar normalization but maxLen param
-    private static string NormalizeDescription(string input, int maxLen)
+    public virtual string Info => $"{Description} <{Size}>";
+
+    private static string ValidateDescription(string? raw)
     {
-        if (input == null) input = "Unknown";
-        var s = input.Trim();
-        if (s.Length == 0) s = "Unknown";
+        string baseValue = string.IsNullOrWhiteSpace(raw) ? "Unknown" : raw;
 
-        while (s.Length < 3) s += "#";
+        string s = Validator.Shortener(baseValue, min: 3, max: 15, placeholder: '#');
 
-        if (s.Length > maxLen) s = s.Substring(0, maxLen);
-
-        if (char.IsLetter(s[0]) && char.IsLower(s[0]))
-            s = char.ToUpperInvariant(s[0]) + s.Substring(1);
+        if (s.Length > 0 && char.IsLetter(s[0]) && char.IsLower(s[0]))
+            s = char.ToUpperInvariant(s[0]) + s[1..];
 
         return s;
     }
+    public override string ToString()
+    {
+        string typeName = GetType().Name.ToUpperInvariant();
+        return $"{typeName}: {Info}";
+    }
+
+
 }
