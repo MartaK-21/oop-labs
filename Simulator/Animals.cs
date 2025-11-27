@@ -1,26 +1,3 @@
-public class Animals
-{
-    // Backing field for Description
-    private string _description = "Unknown";
-
-    // Description - init only, with validation similar to Creature.Name but max length 15
-    public string Description
-    {
-        get => _description;
-        init
-        {
-            _description = NormalizeDescription(value, 15);
-        }
-    }
-
-    // Size with default value
-    public int Size { get; set; } = 3;
-
-    // Constructors
-    public Animals()
-    {
-        _description = "Unknown";
-    }
 namespace Simulator;
 
 public class Animals
