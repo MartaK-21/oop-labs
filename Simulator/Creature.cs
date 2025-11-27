@@ -1,130 +1,81 @@
-using System;
 
-public class Creature
+namespace Simulator;
+
+public abstract class Creature
 {
-    // Backing fields
     private string _name = "Unknown";
     private int _level = 1;
 
-    // Flags to ensure "set only once during initialization"
-    private bool _nameSet = false;
-    private bool _levelSet = false;
-
-    // Public property Name - can be set only once (during initialization/constructor)
     public string Name
     {
         get => _name;
-        set
-        {
-            if (_nameSet) return; // ignore subsequent sets
-            _name = NormalizeName(value, 25); // validation + normalize (max 25)
-            _nameSet = true;
-        }
+        init => _name = ValidateName(value);
     }
 
-    // Public property Level - can be set only once (during initialization/constructor)
     public int Level
     {
         get => _level;
-        set
-        {
-            if (_levelSet) return; // ignore subsequent sets
-            _level = NormalizeLevel(value);
-            _levelSet = true;
-        }
+        init => _level = ValidateLevel(value);
     }
 
-    // Default constructor
-    public Creature()
-    {
-        // set defaults and mark as set
-        _name = "Unknown";
-        _level = 1;
-        _nameSet = true;
-        _levelSet = true;
-    }
+    public abstract string Info { get; }
 
-    // Constructor with parameters (level optional)
-    public Creature(string name, int level = 1)
+    protected Creature() { }
+
+    protected Creature(string name, int level = 1)
     {
-        // Use properties so validation is applied and flags set
         Name = name;
         Level = level;
     }
-
-    // SayHi method
-    public void SayHi()
+    public override string ToString()
     {
-        Console.WriteLine($"Hi, I'm {Name} (level {Level}).");
+        string typeName = GetType().Name.ToUpperInvariant();
+        return $"{typeName}: {Info}";
     }
 
-    // Info read-only property
-    public string Info => $"{Name} <{Level}>";
+    public abstract void SayHi();
 
-    // Upgrade method: increase level by 1 up to max 10
+    public abstract int Power { get; }
+
     public void Upgrade()
     {
-        if (_level < 10)
-        {
-            _level++;
-            // Note: upgrading after initialization is allowed even if Level setter is blocked.
-        }
+        if (_level < 10) _level++;
     }
 
-    // Go single direction - prints "{Name} goes left" (direction name in lower-case)
-    public void Go(Direction dir)
+    public void Go(Direction direction)
     {
-        string dirName = dir.ToString().ToLowerInvariant();
-        Console.WriteLine($"{Name} goes {dirName}");
+        string dirName = direction.ToString().ToLower();
+        Console.WriteLine($"{Name} goes {dirName}.");
     }
 
-    // Go array of directions
-    public void Go(Direction[] dirs)
+    public void Go(Direction[] directions)
     {
-        if (dirs == null) return;
-        foreach (var d in dirs) Go(d);
+        foreach (var d in directions)
+            Go(d);
     }
 
-    // Go from string (uses DirectionParser)
-    public void Go(string s)
+    public void Go(string pattern)
     {
-        var dirs = DirectionParser.Parse(s);
-        Go(dirs);
+        var parsed = DirectionParser.Parse(pattern);
+        Go(parsed);
     }
 
-    // --- Helper methods for validation ---
-
-    // Normalize Name: trim, pad to min 3 with '#', maxLen trim, capitalize first letter
-    private static string NormalizeName(string input, int maxLen)
+    private static string ValidateName(string? raw)
     {
-        if (input == null) input = "Unknown";
+        string baseValue = string.IsNullOrWhiteSpace(raw) ? "Unknown" : raw;
 
-        // trim leading/trailing spaces
-        var s = input.Trim();
+        string s = Validator.Shortener(baseValue, min: 3, max: 25, placeholder: '#');
 
-        // if empty after trim, set to "Unknown"
-        if (s.Length == 0) s = "Unknown";
-
-        // ensure min length 3 by appending '#'
-        while (s.Length < 3) s += "#";
-
-        // trim to max length
-        if (s.Length > maxLen) s = s.Substring(0, maxLen);
-
-        // capitalize first letter if lower-case
-        if (char.IsLetter(s[0]) && char.IsLower(s[0]))
-        {
-            s = char.ToUpperInvariant(s[0]) + s.Substring(1);
-        }
+        if (s.Length > 0 && char.IsLetter(s[0]) && char.IsLower(s[0]))
+            s = char.ToUpperInvariant(s[0]) + s[1..];
 
         return s;
     }
 
-    // Normalize level to range 1..10
-    private static int NormalizeLevel(int lvl)
+
+    private static int ValidateLevel(int value)
     {
-        if (lvl < 1) return 1;
-        if (lvl > 10) return 10;
-        return lvl;
+        return Validator.Limiter(value, 1, 10);
     }
+
 }

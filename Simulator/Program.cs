@@ -1,79 +1,72 @@
-﻿using System;
-
-class Program
-{
-    static void Main()
-    {
-        TestCreatures();
-        Console.WriteLine();
-        TestDirections();
-
-        Console.WriteLine("\nDone. Press any key to exit...");
-        Console.ReadKey();
+﻿    };
+Console.WriteLine("\nMy objects:");
+foreach (var o in myObjects) Console.WriteLine(o);
+        /*
+            My objects:
+            ANIMALS: Dogs <3>
+            BIRDS: Eagles (fly+) <10>
+            ELF: E## [10][0]
+            ORC: Morgash [6][4]
+        */
     }
 
-    static void TestCreatures()
-    {
-        Console.WriteLine("=== TestCreatures ===");
 
-        // default ctor
-        var c1 = new Creature();
-        c1.SayHi();
-        Console.WriteLine("Info: " + c1.Info);
-        // Try to change name/level after initialization (should be ignored)
-        c1.Name = "NewName";   // ignored
-        c1.Level = 9;         // ignored
-        Console.WriteLine("After attempt to change (should be same): " + c1.Info);
 
-        // ctor with lowercase name and short name and invalid level
-        var c2 = new Creature("sh", -5); // name <3 -> padded, level -5 -> set to 1
-        c2.SayHi();
-        Console.WriteLine("Info: " + c2.Info);
 
-        // long name
-        var longName = "thisnameisdefinitelywaytoolongtobeaccepted";
-        var c3 = new Creature(longName, 15); // level >10 -> set to 10
-        c3.SayHi();
-        Console.WriteLine("Info: " + c3.Info);
+    /*static void TestCreatures()
+        {
+            Creature c = new() { Name = "   Shrek    ", Level = 20 };
+            c.SayHi();
+            c.Upgrade();
+            Console.WriteLine(c.Info);
 
-        // Upgrade should increase level up to 10
-        var hero = new Creature("hero", 9);
-        Console.WriteLine("Hero before upgrade: " + hero.Info);
-        hero.Upgrade();
-        Console.WriteLine("Hero after upgrade: " + hero.Info);
-        hero.Upgrade();
-        Console.WriteLine("Hero after second upgrade (max10): " + hero.Info);
+            c = new("  ", -5);
+            c.SayHi();
+            c.Upgrade();
+            Console.WriteLine(c.Info);
 
-        // Animals tests
-        var a1 = new Animals("dogs", 3);
-        Console.WriteLine("Animals Info: " + a1.Info);
+            c = new("  donkey ") { Level = 7 };
+            c.SayHi();
+            c.Upgrade();
+            Console.WriteLine(c.Info);
 
-        var a2 = new Animals(" x ", 5);
-        Console.WriteLine("Animals Info (trim/pad): " + a2.Info);
+            c = new("Puss in Boots – a clever and brave cat.");
+            c.SayHi();
+            c.Upgrade();
+            Console.WriteLine(c.Info);
 
-        var a3 = new Animals("averylongdescriptionthatexceeds", 2);
-        Console.WriteLine("Animals Info (trimmed to 15): " + a3.Info);
-    }
+            c = new("a                            troll name", 5);
+            c.SayHi();
+            c.Upgrade();
+            Console.WriteLine(c.Info);
 
-    static void TestDirections()
-    {
-        Console.WriteLine("=== TestDirections ===");
+            var a = new Animals() { Description = "   Cats " };
+            Console.WriteLine(a.Info);
 
-        var c = new Creature("Shrek", 3);
+            a = new() { Description = "Mice           are great", Size = 40 };
+            Console.WriteLine(a.Info);
+        }
+        static void TestDirections()
+        {
+            Creature c = new("Shrek", 7);
+            c.SayHi();
 
-        Console.WriteLine("-- Single Go --");
-        c.Go(Direction.Left); // "Shrek goes left"
+            Console.WriteLine("\n* Up");
+            c.Go(Direction.Up);
 
-        Console.WriteLine("-- Array Go --");
-        c.Go(new Direction[] { Direction.Up, Direction.Right, Direction.Down });
+            Console.WriteLine("\n* Right, Left, Left, Down");
+            Direction[] directions = {
+                Direction.Right, Direction.Left, Direction.Left, Direction.Down
+            };
+            c.Go(directions);
 
-        Console.WriteLine("-- Parse and Go --");
-        var parsed = DirectionParser.Parse("URDLXYZr");
-        Console.WriteLine("Parsed directions:");
-        foreach (var d in parsed)
-            Console.WriteLine(d);
+            Console.WriteLine("\n* LRL");
+            c.Go("LRL");
 
-        Console.WriteLine("-- Go from string --");
-        c.Go("UrrdLx"); // should do U R R D L (ignore x)
-    }
+            Console.WriteLine("\n* xxxdR lyyLTyu");
+            c.Go("xxxdR lyyLTyu");
+        }*/
+
+
 }
+
